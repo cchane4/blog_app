@@ -54,6 +54,17 @@ app.post("/blogs", (req, res) => {
     });   
 }); 
 
+//show route
+app.get("/blogs/:id", (req, res)=> { 
+    Blog.findById(req.params.id, (err, found_blog )=> { 
+        if (err){ 
+            res.redirect("/blogs"); 
+        } else { 
+            res.render("show",{ blog: found_blog}); 
+        }
+    });
+}); 
+
 app.listen(3000, () => { 
     console.log("yelp server has started"); 
 });
