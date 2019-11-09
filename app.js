@@ -20,11 +20,12 @@ let blog_schema = new mongoose.Schema({
 let Blog = mongoose.model("Blog", blog_schema); 
 //restful routes
  
-
+// homepage 
 app.get("/", (req, res) => { 
     res.redirect("/blogs"); 
   }); 
-  
+
+  // index route 
 app.get("/blogs", (req, res) => {
   Blog.find({}, (err, blogs) => { 
       if (err){ 
@@ -35,6 +36,23 @@ app.get("/blogs", (req, res) => {
   }); 
 }); 
 
+// new route 
+app.get("/blogs/new", (req, res) => { 
+    res.render("new"); 
+}); 
+
+// create route
+app.post("/blogs", (req, res) => { 
+    //create blog
+    Blog.create(req.body.blog, (err, new_blog) => { 
+        if (err){ 
+            res.render("new"); 
+        } else { 
+        // redirect to the index
+        res.redirect("/blogs"); 
+        }
+    });   
+}); 
 
 app.listen(3000, () => { 
     console.log("yelp server has started"); 
