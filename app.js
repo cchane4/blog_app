@@ -8,6 +8,7 @@ mongoose.connect("mongodb://localhost:27017/restful_blog_app", { useNewUrlParser
 app.set("view engine", "ejs"); 
 app.use(express.static("public")); 
 app.use(body_parser.urlencoded({extended: true})); 
+
 // Mongoose/model config
 let blog_schema = new mongoose.Schema({ 
     title: String, 
@@ -18,6 +19,21 @@ let blog_schema = new mongoose.Schema({
 
 let Blog = mongoose.model("Blog", blog_schema); 
 //restful routes
+ 
+
+app.get("/", (req, res) => { 
+    res.redirect("/blogs"); 
+  }); 
+  
+app.get("/blogs", (req, res) => {
+  Blog.find({}, (err, blogs) => { 
+      if (err){ 
+          console.log("Error!!"); 
+      } else { 
+          res.render("index", {blogs: blogs}); 
+      }
+  }); 
+}); 
 
 
 app.listen(3000, () => { 
