@@ -1,14 +1,16 @@
 const body_parser = require ("body-parser"); 
 const method_override = require('method-override'); 
+const express_sanitizer = require("express-sanitizer"); 
 const mongoose = require("mongoose"); 
 const express = require ('express'); 
 app = express (); 
 
 //app config
-mongoose.connect("mongodb://localhost:27017/restful_blog_app", { useNewUrlParser: true, useUnifiedTopology: true }); 
+mongoose.connect("mongodb://localhost:27017/restful_blog_app", { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }); 
 app.set("view engine", "ejs"); 
 app.use(express.static("public")); 
-app.use(body_parser.urlencoded({extended: true})); 
+app.use(body_parser.urlencoded({extended: true}));
+app.use(express_sanitizer()); //the following line has to be after body parser
 app.use(method_override("_method")); 
 
 // Mongoose/model config
@@ -46,6 +48,7 @@ app.get("/blogs/new", (req, res) => {
 // create route
 app.post("/blogs", (req, res) => { 
     //create blog
+    req.body.blog.body = req.sanitize(req.body.blog.body); 
     Blog.create(req.body.blog, (err, new_blog) => { 
         if (err){ 
             res.render("new"); 
@@ -79,7 +82,8 @@ app.get("/blogs/:id/edit", (req, res) => {
 });
 
 //update route 
-app.put("/blogs/:id", (req, res) => { 
+app.put("/blogs/:id", (req, res) => {
+ req.body.blog.body = req.sanitize(req.body.blog.body); 
  Blog.findByIdAndUpdate(req.params.id, req.body.blog, (err, updated_blog) => { 
     if (err) { 
         res.redirect("/blogs"); 
