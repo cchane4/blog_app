@@ -6,7 +6,7 @@ const express = require ('express');
 app = express (); 
 
 //app config
-mongoose.connect("mongodb://localhost:27017/restful_blog_app", { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }); 
+mongoose.connect("mongodb://heroku_x6k50747:ot4t8uslpiie7n1g4mb8mfl4m6@ds061621.mlab.com:61621/heroku_x6k50747", { useNewUrlParser: true, useUnifiedTopology: true });
 app.set("view engine", "ejs"); 
 app.use(express.static("public")); 
 app.use(body_parser.urlencoded({extended: true}));
@@ -104,6 +104,7 @@ app.delete("/blogs/:id", (req, res) => {
        }
     });
 }); 
+
 
 app.listen(3000, () => { 
     console.log("yelp server has started"); 
